@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 // AUTH CONTEXT — JWT + persistent session
 // ═══════════════════════════════════════════════════════════════
 const AuthContext = createContext(null);
-
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ function AuthProvider({ children }) {
     if (res.status === 401) {
       const rt = localStorage.getItem("refreshToken");
       if (rt) {
-        const rr = await fetch("/api/auth/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refreshToken: rt }) });
+        const rr = await fetch("${API_URL}/api/auth/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refreshToken: rt }) });
         if (rr.ok) {
           const d = await rr.json();
           localStorage.setItem("accessToken", d.accessToken);
@@ -38,7 +38,7 @@ function AuthProvider({ children }) {
       const token = localStorage.getItem("accessToken");
       if (token) {
         try {
-          const res = await fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } });
+          const res = await fetch("${API_URL}/api/auth/me", { headers: { Authorization: `Bearer ${token}` } });
           if (res.ok) { const d = await res.json(); setUser(d.user); }
           else { localStorage.clear(); }
         } catch { localStorage.clear(); }
@@ -49,21 +49,21 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const res = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+    const res = await fetch("${API_URL}/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
     const data = await res.json();
     if (data.success) { localStorage.setItem("accessToken", data.accessToken); localStorage.setItem("refreshToken", data.refreshToken); setUser(data.user); }
     return data;
   };
 
   const register = async (form) => {
-    const res = await fetch("/api/auth/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+    const res = await fetch("${API_URL}/api/auth/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
     const data = await res.json();
     if (data.success) { localStorage.setItem("accessToken", data.accessToken); localStorage.setItem("refreshToken", data.refreshToken); setUser(data.user); }
     return data;
   };
 
   const logout = async () => {
-    try { await fetch("/api/auth/logout", { method: "POST", headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` } }); } catch {}
+    try { await fetch("${API_URL}/api/auth/logout", { method: "POST", headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` } }); } catch {}
     localStorage.clear(); setUser(null);
   };
 
@@ -686,7 +686,7 @@ function PredictPage({ notify }) {
 
       let aiResult;
       try {
-        const res = await fetch("/api/ai/predict", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({
+        const res = await fetch("${API_URL}/api/ai/predict", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({
           model:"claude-sonnet-4-20250514", max_tokens:800,
           system:"You are a clinical AI assistant. Respond ONLY with valid JSON. No markdown.",
           messages:[{ role:"user", content:`Patient symptoms: ${selected.map(s=>SYMPTOM_LABELS[s]||s).join(", ")}\nTop diseases: ${top3.map(d=>`${d.name} (${d.icd})`).join(", ")}\nReturn JSON: {"primary":"disease name","confidence":85,"explanation":"2 sentence clinical explanation","recommendations":["action1","action2","action3"],"urgency":"See a doctor within 3 days","disclaimer":"AI screening only — not a diagnosis."}` }]
