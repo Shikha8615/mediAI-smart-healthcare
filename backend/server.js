@@ -17,7 +17,7 @@ connectDB();
 
 // ── SECURITY ──────────────────────────────────────────────────────
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL || 'https://mediai-smart-healthcare.onrender.com', credentials: true }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, message: 'Too many requests' } }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
