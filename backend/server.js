@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync('./ssl/key.pem') && f
   server = http.createServer(app);
 }
 
-const io = new Server(server, { cors: { origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true } });
+const io = new Server(server, { cors: { origin: process.env.FRONTEND_URL || "https://medi-ai-smart-healthcare.vercel.app", credentials: true } });
 initSocket(io);
 
 const PORT = process.env.PORT || 5000;
