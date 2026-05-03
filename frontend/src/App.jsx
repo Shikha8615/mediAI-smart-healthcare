@@ -439,9 +439,9 @@ function LoginPage({ setPage, notify }) {
         <div style={{ textAlign:"center",marginTop:16,padding:"12px",background:"#f0fdfa",borderRadius:10 }}>
           <p style={{ color:"#64748b",fontSize:"0.88rem" }}>No account? <button onClick={()=>setPage("register")} style={{ color:"#0891b2",fontWeight:700,background:"none",border:"none",cursor:"pointer",textDecoration:"underline" }}>Register</button></p>
         </div>
-        <div style={{ marginTop:14,padding:"10px 14px",background:"#fef9c3",borderRadius:8,fontSize:"0.78rem",color:"#854d0e",textAlign:"center" }}>
+        {/* <div style={{ marginTop:14,padding:"10px 14px",background:"#fef9c3",borderRadius:8,fontSize:"0.78rem",color:"#854d0e",textAlign:"center" }}>
           🛡 Admin: admin@mediai.com / Admin@123456
-        </div>
+        </div> */}
       </div>
     </div>
   );
