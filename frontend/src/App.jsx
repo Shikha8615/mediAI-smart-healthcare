@@ -983,7 +983,7 @@ const run = async () => {
 // ═══════════════════════════════════════════════════════════════
 const loadAppts = async () => {
   try {
-    const res = await apiCall("/api/appointments/my"); // ✅ FIXED
+    const res = await apiCall("/appointments/my"); // ✅ FIXED
 
     if (!res) return;
 
@@ -1006,7 +1006,6 @@ const loadAppts = async () => {
     notify("Failed to load appointments", "error");
   }
 };
-
 const book = async () => {
   if (!form.doctorName || !form.date || !form.time || !form.reason) {
     notify("All fields required", "error");
@@ -1016,7 +1015,7 @@ const book = async () => {
   setLoading(true);
 
   try {
-    const res = await apiCall("/api/appointments", {
+    const res = await apiCall("/appointments", { // ✅ FIXED
       method: "POST",
       body: JSON.stringify(form)
     });
@@ -1057,10 +1056,9 @@ const book = async () => {
 
   setLoading(false);
 };
-
 const cancel = async (id) => {
   try {
-    const res = await apiCall(`/api/appointments/${id}/cancel`, { // ✅ FIXED
+    const res = await apiCall(`/appointments/${id}/cancel`, { // ✅ FIXED
       method: "PATCH"
     });
 
