@@ -789,13 +789,39 @@ function AppointmentsPage({ notify }) {
 
   useEffect(() => { loadAppts(); }, []);
 
-  const book = async () => {
-    if (!form.doctorName||!form.date||!form.time||!form.reason) { notify("All fields required","error"); return; }
-    setLoading(true);
-    const res = await apiCall("/appointments", { method:"POST", body:JSON.stringify(form) });
-    if (res) { const d = await res.json(); if (d.success) { notify("Appointment booked! 📅"); setForm({doctorName:"",doctorSpecialty:"",date:"",time:"",reason:""}); loadAppts(); setTab("my"); } else notify(d.message,"error"); }
-    setLoading(false);
-  };
+const book = async () => {
+  if (!form.doctorName || !form.date || !form.time || !form.reason) {
+    notify("All fields required", "error");
+    return;
+  }
+
+  setLoading(true);
+
+  const res = await apiCall("/api/appointments", {   // ✅ FIXED
+    method: "POST",
+    body: JSON.stringify(form)
+  });
+
+  if (res) {
+    const d = await res.json();
+    if (d.success) {
+      notify("Appointment booked! 📅");
+      setForm({
+        doctorName: "",
+        doctorSpecialty: "",
+        date: "",
+        time: "",
+        reason: ""
+      });
+      loadAppts();
+      setTab("my");
+    } else {
+      notify(d.message, "error");
+    }
+  }
+
+  setLoading(false);
+};
 
   const cancel = async (id) => {
     const res = await apiCall(`/appointments/${id}/cancel`, { method:"PATCH" });
